@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PredictOps AI | Personal Blog Monitoring</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">P</div>
+        <div>
+          <h2>PredictOps AI</h2>
+          <span>DEVOPS INTELLIGENCE</span>
+        </div>
+      </div>
+
+      <p class="nav-heading">MONITORING</p>
+
+      <nav class="navigation">
+        <a class="nav-link active" href="#overview">▦ <span>Overview</span></a>
+        <a class="nav-link" href="#performance">⌁ <span>Performance</span></a>
+        <a class="nav-link" href="#visitors">◎ <span>Blog Visitors</span></a>
+        <a class="nav-link" href="#alerts">⚑ <span>Alerts</span></a>
+      </nav>
+
+      <div class="sidebar-status">
+        <div class="status-line">
+          <span class="status-dot"></span>
+          <span id="connectionStatus">Connecting to blog...</span>
+        </div>
+        <small>Monitoring your personal blog</small>
+      </div>
+
+      <div class="sidebar-footer">
+        <strong>STUDENT PROTOTYPE</strong>
+        <span>Local development · No AWS yet</span>
+      </div>
+    </aside>
+
+    <!-- MAIN DASHBOARD -->
+    <main class="main-content" id="overview">
+
+      <!-- HEADER -->
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">SYSTEM OVERVIEW</p>
+          <h1>Personal Blog Performance</h1>
+          <p class="page-description">
+            Monitor blog traffic, response times, errors and resource usage.
+          </p>
+        </div>
+
+        <div class="connection-badge">
+          <span class="status-dot"></span>
+          Blog monitoring active
+        </div>
+      </header>
+
+      <!-- LIVE METRICS -->
+      <section class="metrics-section">
+        <div class="section-heading">
+          <div>
+            <h2>Live blog metrics</h2>
+            <p>Refreshes automatically every 5 seconds</p>
+          </div>
+          <small id="lastUpdated">Waiting for metrics...</small>
+        </div>
+
+        <div class="metrics-grid">
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Average response time</span>
+              <span class="metric-icon purple">⌁</span>
+            </div>
+            <div class="metric-value">
+              <span id="latency">0.0</span>
+              <small>ms</small>
+            </div>
+            <p>Average blog request latency</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Requests / minute</span>
+              <span class="metric-icon blue">↗</span>
+            </div>
+            <div class="metric-value">
+              <span id="requestRate">0</span>
+            </div>
+            <p>Requests received in the last 60 seconds</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Blog error rate</span>
+              <span class="metric-icon orange">!</span>
+            </div>
+            <div class="metric-value">
+              <span id="errorRate">0.0</span>
+              <small>%</small>
+            </div>
+            <p>HTTP 5xx responses in the recent window</p>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Blog host CPU usage</span>
+              <span class="metric-icon green">▥</span>
+            </div>
+            <div class="metric-value">
+              <span id="cpu">0.0</span>
+              <small>%</small>
+            </div>
+            <div class="progress-track">
+              <div id="cpuBar" class="progress-fill"></div>
+            </div>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Blog host memory usage</span>
+              <span class="metric-icon blue">▤</span>
+            </div>
+            <div class="metric-value">
+              <span id="memory">0.0</span>
+              <small>%</small>
+            </div>
+            <div class="progress-track">
+              <div id="memoryBar" class="progress-fill"></div>
+            </div>
+          </article>
+
+          <article class="metric-card">
+            <div class="metric-card-top">
+              <span>Blog uptime</span>
+              <span class="metric-icon purple">◷</span>
+            </div>
+            <div class="metric-value">
+              <span id="uptime">N/A</span>
+            </div>
+            <p>Blog process uptime will be added later</p>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- RESPONSE-TIME CHART -->
+      <section class="performance-section" id="performance">
+        <div class="section-heading">
+          <div>
+            <h2>Blog response-time trend</h2>
+            <p>Recent requests handled by your personal blog</p>
+          </div>
+
+          <span class="chart-legend">
+            <span class="legend-dot"></span> Latency (ms)
+          </span>
+        </div>
+
+        <div class="chart-card">
+          <div id="chartEmpty" class="chart-empty">
+            Waiting for blog requests. Visit your blog to generate metrics.
+          </div>
+          <canvas id="latencyChart"></canvas>
+        </div>
+      </section>
+
+      <!-- LIVE BLOG VISITORS TABLE -->
+      <section class="visitors-section" id="visitors">
+        <div class="section-heading">
+          <div>
+            <h2>Live Blog Visitors</h2>
+            <p>Recent requests received by your personal blog</p>
+          </div>
+          <small id="visitorCount">Waiting for visitors...</small>
+        </div>
+
+        <div class="visitors-table-card">
+          <table class="visitors-table">
+            <thead>
+              <tr>
+                <th>Visitor IP</th>
+                <th>Page / Route</th>
+                <th>Method</th>
+                <th>Status</th>
+                <th>Response Time</th>
+              </tr>
+            </thead>
+
+            <tbody id="visitorsTableBody">
+              <tr>
+                <td colspan="5">Waiting for blog requests...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="test-note">
+          Visitor information refreshes every 5 seconds.
+        </p>
+      </section>
+
+      <!-- ALERTS AND TEST TRAFFIC -->
+      <section class="bottom-grid">
+
+        <article class="panel-card" id="alerts">
+          <div class="panel-heading">
+            <div>
+              <h2>Blog monitoring alerts</h2>
+              <p>Performance thresholds and error warnings</p>
+            </div>
+            <span class="metric-icon purple">⚑</span>
+          </div>
+
+          <div id="alertsList" class="alerts-list">
+            <div class="alert-row">Waiting for alerts...</div>
+          </div>
+        </article>
+
+        <article class="panel-card">
+          <div class="panel-heading">
+            <div>
+              <h2>Generate test traffic</h2>
+              <p>Test the blog monitoring connection</p>
+            </div>
+            <span class="metric-icon purple">⌁</span>
+          </div>
+
+          <div class="test-links">
+            <a href="http://127.0.0.1:5001/"
+               target="_blank" rel="noopener">
+              Test normal blog request ↗
+            </a>
+
+            <a href="http://127.0.0.1:5001/test/slow"
+               target="_blank" rel="noopener">
+              Test slow response ↗
+            </a>
+
+            <a href="http://127.0.0.1:5001/test/error"
+               target="_blank" rel="noopener">
+              Test server-error logging ↗
+            </a>
+          </div>
+
+          <p class="test-note">
+            Keep both Flask applications running to collect metrics.
+          </p>
+        </article>
+
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="page-footer">
+        PredictOps AI · Personal blog monitoring prototype
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+</body>
+</html>
